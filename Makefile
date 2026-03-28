@@ -1,12 +1,13 @@
-.PHONY: all backend frontend clean help
+.PHONY: all backend frontend clean help run
 
-all: backend frontend
+run: backend frontend
+	@cd backend/build/bin && ./bookhub
 
 backend:
 	@echo "=== Building backend ==="
 	@cd backend && mkdir build 2>nul || true
-	@cd backend/build && cmake .. 
-	@cmake --build backend/build 
+	@cd backend/build && cmake .. -DCMAKE_BUILD_TYPE=Release
+	@cmake --build backend/build --config Release -j4
 
 frontend:
 	@echo "=== Building frontend ==="
