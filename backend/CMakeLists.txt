@@ -7,22 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Threads REQUIRED)
 
-# Скачиваем его через FetchContent
 include(FetchContent)
 
-message(STATUS "Fetching Crow...")
-
-# Crow - header-only, добавляется через include
-FetchContent_Declare(
-	Crow
-	GIT_REPOSITORY 	https://github.com/CrowCpp/Crow.git
-	GIT_TAG 	master
-)
-
-FetchContent_MakeAvailable(Crow)
-
 message(STATUS "Fetching Asio...")
-
 # Asio - зависимость Crow
 FetchContent_Declare(
 	asio
@@ -31,6 +18,18 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(asio)
+
+set(ASIO_INCLUDE_DIR ${asio_SOURCE_DIR}/asio/include CACHE PATH "ASIO include directory")
+
+message(STATUS "Fetching Crow...")
+# Crow - header-only, добавляется через include
+FetchContent_Declare(
+	Crow
+	GIT_REPOSITORY 	https://github.com/CrowCpp/Crow.git
+	GIT_TAG 	master
+)
+
+FetchContent_MakeAvailable(Crow)
 
 add_executable(bookhub 
 	src/main.cpp
@@ -51,7 +50,7 @@ target_link_libraries(bookhub PRIVATE
 if(MSVC)
 	target_compile_options(bookhub PRIVATE /W4)
 else()
-	target_compile_options(bookhub PRIVATE -Wall -Wextra -o2)
+	target_compile_options(bookhub PRIVATE -Wall -Wextra -O2)
 endif()
 
 # Куда класть исполняемый файл
