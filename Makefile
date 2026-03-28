@@ -1,16 +1,29 @@
-.PHONY: all backend frontend clean help run
+.PHONY: debug release backend backend-dev frontend frontend-dev clean help run
 
-run: backend frontend
+debug: backend-dev frontend-dev
 	@cd backend/build/bin && ./bookhub
 
+release: backend frontend
+	@cd backend/build/bin && ./bookhub
+
+backend-dev:
+	@echo "=== Fast building backend (Debug) ==="
+	@cd backend && mkdir -p build
+	@cd backend/build && cmake .. -DCMAKE_BUILD_TYPE=Debug
+	@cmake --build backend/build --config Debug -j4
+
 backend:
-	@echo "=== Building backend ==="
+	@echo "=== Building backend (Release) ==="
 	@cd backend && mkdir build 2>nul || true
 	@cd backend/build && cmake .. -DCMAKE_BUILD_TYPE=Release
 	@cmake --build backend/build --config Release -j4
 
+frontend-dev:
+	@echo "=== Fast building frontend (Debug) ==="
+	@cd frontend/my-react-app && npm run start
+
 frontend:
-	@echo "=== Building frontend ==="
+	@echo "=== Building frontend (Release) ==="
 	@cd frontend/my-react-app/ && npm install --silent
 	@cd frontend/my-react-app/ && npm run build
 
