@@ -54,3 +54,18 @@ void Server::setup()
 {
     // add handlers
 }
+
+void Server::addHandler(std::shared_ptr<IHandler> handler)
+{
+    this->handlers_.push_back(handler);
+    handler->registerRoutes(*this->app_);
+}
+
+void Server::start()
+{
+    this->setup();
+    this->app_->port(this->config_.port)
+        .multithreaded()
+        .concurrency(this->config_.threads)
+        .run_async();
+} 
