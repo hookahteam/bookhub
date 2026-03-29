@@ -22,7 +22,7 @@ const Header = () => {
             <div className="search-popup">
               <input
                 type="text"
-                placeholder="Введите поиск..."
+                placeholder="Find a book..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
