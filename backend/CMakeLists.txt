@@ -37,22 +37,23 @@ add_executable(bookhub
 	src/main.cpp
 )
 
-# Где компилятору искать заколовочные файлы
-target_include_directories(bookhub PRIVATE 
-	include
-	${asio_SOURCE_DIR}/asio/include	
-)
-
-target_link_libraries(bookhub PRIVATE
+target_link_libraries(bookhub PUBLIC
 	Crow::Crow
 	Threads::Threads
 )
 
+# Где компилятору искать заколовочные файлы
+target_include_directories(bookhub PUBLIC 
+	include
+	${PROJECT_SOURCE_DIR}/include
+	${asio_SOURCE_DIR}/asio/include	
+)
+
 # Опции компиляции
 if(MSVC)
-	target_compile_options(bookhub PRIVATE /W4)
+	target_compile_options(bookhub PUBLIC /W4)
 else()
-	target_compile_options(bookhub PRIVATE -Wall -Wextra -O2)
+	target_compile_options(bookhub PUBLIC -Wall -Wextra -O2)
 endif()
 
 # Куда класть исполняемый файл
