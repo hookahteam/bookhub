@@ -9,6 +9,8 @@ find_package(Threads REQUIRED)
 
 include(FetchContent)
 
+set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/external")
+
 message(STATUS "Fetching Asio...")
 # Asio - зависимость Crow
 FetchContent_Declare(

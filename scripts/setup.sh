@@ -28,6 +28,22 @@ check_install() {
     fi
 }
 
+# Установка зависимостей самого React-приложения
+PROJECT_DIR="./frontend/my-react-app"
+
+if [ -d "$PROJECT_DIR" ]; then
+    echo "Переход в директорию проекта и установка библиотек..."
+    cd "$PROJECT_DIR"
+    sudo npm install -g n && sudo n lts
+    hash -r
+    # Устанавливаем все зависимости из package.json + конкретно роутер
+    npm install
+    npm install react-router-dom 
+else
+    echo "Предупреждение: Директория проекта $PROJECT_DIR не найдена. Пропустите установку npm-пакетов."
+fi
+
+
 # Обновляем список пакетов
 echo "Обновление информации о пакетах..."
 sudo $PKG_MANAGER $UPDATE_CMD
@@ -38,6 +54,5 @@ check_install "make" "make"
 check_install "cmake" "cmake"
 check_install "git" "git"
 check_install "npm" "npm"
-check_install "react-scripts" "react-scripts"
 
 echo "Готово!"

@@ -1,4 +1,5 @@
 #=====Build and Cmake=====
 build/
 *.swp
-nul3
+nul
+backend/external/
