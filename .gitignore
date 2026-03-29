@@ -1,5 +1,6 @@
 #=====Build and Cmake=====
 build/
+backend/external/
+.vscode/
 *.swp
 nul
-backend/external/
