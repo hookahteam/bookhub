@@ -9,7 +9,7 @@ class BaseHandler : public IHandler
 public:
     explicit BaseHandler(const std::string &basePath);
 
-private:
+protected:
     std::string basePath_;
 
     // Utility functions

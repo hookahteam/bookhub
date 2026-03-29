@@ -48,17 +48,68 @@ crow::response UserHandler::list(const crow::request &req)
 
 crow::response UserHandler::get(int id)
 {
+    if (this->users_.find(id) == this->users_.end())
+    {
+        return this->not_found("User not found");
+    }
 
+    User user = this->users_[id];
+    crow::json::wvalue userJson;
+    userJson["id"] = user.id;
+    userJson["username"] = user.username;
+    userJson["email"] = user.email;
+
+    return crow::response(crow::OK, userJson);
 }
 
 crow::response UserHandler::create(const crow::request &req)
 {
+    crow::json::rvalue json = crow::json::load(req.body);
+    
+    std::string username = json["username"].s(); // .s() converts value to the string
+    std::string email = json["email"].s();
 
+    this->mutex_.lock();
+
+    this->last_id_ += 1;
+    User user = User(this->last_id_, username, email);
+    this->users_[this->last_id_] = user;
+    
+    this->mutex_.unlock();
+
+    crow::json::wvalue resp;
+    resp["id"] = user.id;
+    resp["username"] = user.username;
+    resp["email"] = user.email;
+
+    return crow::response(crow::CREATED, resp);
 }
 
 crow::response UserHandler::update(int id, const crow::request &req)
 {
+    if (this->users_.find(id) == this->users_.end())
+    {
+        return this->not_found("User not found");
+    }
 
+    crow::json::rvalue json = crow::json::load(req.body);
+    
+    std::string username = json["username"].s(); // .s() converts value to the string
+    std::string email = json["email"].s();
+
+    this->mutex_.lock();
+
+    User user = User(id, username, email);
+    this->users_[id] = user;
+    
+    this->mutex_.unlock();
+
+    crow::json::wvalue resp;
+    resp["id"] = user.id;
+    resp["username"] = user.username;
+    resp["email"] = user.email;
+
+    return crow::response(crow::CREATED, resp);
 }
 
 crow::response UserHandler::remove(int id)
