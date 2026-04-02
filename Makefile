@@ -3,9 +3,11 @@
 start: frontend-dev
 
 debug: backend-dev frontend-quick
+	@cp -r frontend/my-react-app/build/. backend/build/bin/front/
 	@cd backend/build/bin && ./bookhub
 
 release: backend frontend
+	@cp -r frontend/my-react-app/build/. backend/build/bin/front/
 	@cd backend/build/bin && ./bookhub
 
 backend-dev:

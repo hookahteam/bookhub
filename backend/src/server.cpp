@@ -54,6 +54,27 @@ void Server::setup()
 {
     // add handlers
     this->addHandler(std::make_shared<UserHandler>("/api/users"));
+
+    setupStaticRoutes(*this->app_);
+}
+
+void Server::setupStaticRoutes(App &app)
+{
+    app.route_dynamic("/")
+        .methods(crow::HTTPMethod::GET)(
+            [this](const crow::request &req, crow::response &res) {
+                res.set_static_file_info("front/index.html");
+                res.end();
+            });
+
+    app.route_dynamic("/static/<string>/<string>")
+        .methods(crow::HTTPMethod::GET)(
+            [](const crow::request &req, crow::response &res, std::string folder, std::string file) {
+                std::string full_path = "front/static/" + folder + "/" + file;
+                res.set_static_file_info(full_path);
+                res.end();
+            });
+
 }
 
 void Server::addHandler(std::shared_ptr<IHandler> handler)

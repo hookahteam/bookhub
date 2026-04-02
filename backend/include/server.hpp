@@ -8,6 +8,7 @@
 #include "handlers/users.hpp"
 #include "handlers/interface.hpp"
 
+
 struct ServerConfig {
     int port = 8080;
     int threads = 2;
@@ -30,5 +31,6 @@ private:
 
     // Setup handlers
     void setup();
+    void setupStaticRoutes(App &app);
     void addHandler(std::shared_ptr<IHandler> handler);
 };
