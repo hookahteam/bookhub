@@ -4,7 +4,7 @@
 
 struct Book
 {
-    std::string name;
+    std::string title;
     std::string author;
     int year;
     int id;

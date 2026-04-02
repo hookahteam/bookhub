@@ -23,7 +23,7 @@ crow::response BookHandler::list(const crow::request &req)
     {
         crow::json::wvalue bookJson;
         bookJson["id"] = book.second.id;
-        bookJson["name"] = book.second.name;
+        bookJson["title"] = book.second.title;
         bookJson["author"] = book.second.author;
         bookJson["year"] = book.second.year;
 
@@ -44,7 +44,7 @@ crow::response BookHandler::get(int id)
     Book book = this->books_[id];
     crow::json::wvalue bookJson;
     bookJson["id"] = book.id;
-    bookJson["name"] = book.name;
+    bookJson["title"] = book.title;
     bookJson["author"] = book.author;
     bookJson["year"] = book.year;
 
