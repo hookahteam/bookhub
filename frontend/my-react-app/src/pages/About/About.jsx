@@ -13,7 +13,7 @@ const About = () => {
       name: 'Artem Mednov',
       education: 'Peter the Great St. Petersburg Polytechnic University',
       position: 'Frontend',
-      learningGoal: 'Through this project, I will learn how to work with Git, React, and JavaScript...',
+      learningGoal: 'Through this project, I will learn how to work with Git, React, and JavaScript. I will gain an understanding of how the frontend interacts with the backend and gain experience working as part of a team.',
       photo: photo1
     },
     {
@@ -29,7 +29,7 @@ const About = () => {
   return (
     <div className="about-page">
       <h1 className="about-title">{t('about.title')}</h1>
-      
+      <h2 className="about-description">{t('about.description')}</h2>
       <div className="team-cards">
         {teamMembers.map((member) => (
           <div key={member.id} className="team-card">
