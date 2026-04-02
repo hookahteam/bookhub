@@ -22,7 +22,7 @@ const Home = () => {
       }
       
       const data = await response.json();
-      setBooks(data);
+      setBooks(data.books);
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -46,8 +46,9 @@ const Home = () => {
         {books.map((book) => (
           <div key={book.id} className="book-card">
             <h2 className="book-title">{book.title}</h2>
-            <p className="book-description">{book.description}</p>
+            <p className="book-author">{book.author}</p>
             <span className="book-id">ID: {book.id}</span>
+            <span className="book-year">year: {book.year}</span>
           </div>
         ))}
       </div>
