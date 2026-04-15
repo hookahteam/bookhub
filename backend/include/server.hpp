@@ -5,9 +5,9 @@
 #include <string>
 
 #include "crow.h"
-#include "handlers/users.hpp"
-#include "handlers/books.hpp"
-#include "handlers/interface.hpp"
+#include "handler/user.hpp"
+#include "handler/book.hpp"
+#include "handler/interface.hpp"
 
 
 struct ServerConfig {

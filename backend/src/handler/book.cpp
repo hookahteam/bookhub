@@ -1,4 +1,4 @@
-#include "handlers/books.hpp"
+#include "handler/book.hpp"
 
 BookHandler::BookHandler(const std::string &basePath)
     : BaseHandler(basePath)

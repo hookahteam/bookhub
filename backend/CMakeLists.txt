@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Threads REQUIRED)
-find_package(SQLite3 REQUIRED)
+find_package(PostgreSQL REQUIRED)
 
 include(FetchContent)
 
@@ -34,28 +34,24 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Crow)
 
-message(STATUS "Fetching SQLite...")
-# Crow - header-only, добавляется через include
-FetchContent_Declare(
-	Crow
-	GIT_REPOSITORY 	https://github.com/CrowCpp/Crow.git
-	GIT_TAG 	master
-)
-
-FetchContent_MakeAvailable(Crow)
+set(PQXX /usr/local/include/pqxx)
+find_library(PQXX_LIB pqxx)
 
 add_executable(bookhub 
 	src/main.cpp
 	src/server.cpp
-	src/handlers/base.cpp
-	src/handlers/users.cpp
-	src/handlers/books.cpp
+	src/database/database.cpp
+	src/repository/user.cpp
+	src/handler/base.cpp
+	src/handler/user.cpp
+	src/handler/book.cpp
 )
 
 target_link_libraries(bookhub PUBLIC
 	Crow::Crow
 	Threads::Threads
-	SQLite::SQLite3
+	PostgreSQL::PostgreSQL
+	${PQXX_LIB}	
 )
 
 # Где компилятору искать заколовочные файлы
@@ -63,6 +59,7 @@ target_include_directories(bookhub PUBLIC
 	include
 	${PROJECT_SOURCE_DIR}/include
 	${asio_SOURCE_DIR}/asio/include	
+	${PostgreSQL_INCLUDE_DIRS}
 )
 
 # Опции компиляции
