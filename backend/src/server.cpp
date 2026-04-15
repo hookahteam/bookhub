@@ -52,8 +52,14 @@ Server::Server(const ServerConfig &config): config_(config)
 
 void Server::setup()
 {
+    // connect to database
+    auto db = std::make_shared<Database>("test");
+
+    // create repositories
+    auto userRepo = std::make_shared<UserRepository>(db);
+
     // add handlers
-    this->addHandler(std::make_shared<UserHandler>("/api/users"));
+    this->addHandler(std::make_shared<UserHandler>("/api/users", userRepo));
     this->addHandler(std::make_shared<BookHandler>("/api/books"));
 
     setupStaticRoutes(*this->app_);

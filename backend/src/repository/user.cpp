@@ -1,5 +1,11 @@
 #include "repository/user.hpp"
 
+UserRepository::UserRepository(std::shared_ptr<Database> db_) 
+    : db(db_)
+{
+
+}
+
 RegisterResult UserRepository::create(int id, const std::string& username, const std::string& email)
 {
     try {

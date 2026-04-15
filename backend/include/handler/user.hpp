@@ -6,7 +6,7 @@
 class UserHandler : public BaseHandler
 {
 public:
-    UserHandler(const std::string &basePath);
+    UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> userRepo);
     void registerRoutes(App &app);
 
 private:

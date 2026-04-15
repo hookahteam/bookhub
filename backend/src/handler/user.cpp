@@ -1,9 +1,8 @@
 #include "handler/user.hpp"
 
-UserHandler::UserHandler(const std::string &basePath)
-    : BaseHandler(basePath)
+UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> userRepo_)
+    : BaseHandler(basePath), userRepo(userRepo_)
 {
-    userRepo = std::make_shared<UserRepository>();
 }
 
 // crow::response UserHandler::list(const crow::request &req)

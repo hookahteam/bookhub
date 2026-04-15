@@ -18,7 +18,6 @@ int main()
 
         auto server = std::make_unique<Server>(config);
         server->start();
-        Database db("test");
         return 0;
     }
     catch(const std::exception& e)

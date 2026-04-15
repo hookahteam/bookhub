@@ -5,6 +5,8 @@
 #include <string>
 
 #include "crow.h"
+#include "database/database.hpp"
+#include "repository/user.hpp"
 #include "handler/user.hpp"
 #include "handler/book.hpp"
 #include "handler/interface.hpp"

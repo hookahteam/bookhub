@@ -24,4 +24,4 @@ struct LoginResult {
 struct RegisterResult {
     bool success = false;
     UserError error = UserError::None;
-}
+};
