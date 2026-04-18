@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../models/book.hpp"
-#include "base.hpp"
+#include "../models/book.h"
+#include "base.h"
 
 class BookHandler : public BaseHandler
 {

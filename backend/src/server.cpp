@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "server.h"
 
 Server::Server(const ServerConfig &config): config_(config)
 {
@@ -52,8 +52,18 @@ Server::Server(const ServerConfig &config): config_(config)
 
 void Server::setup()
 {
+    // connect to database
+    auto db = std::make_shared<Database>("test");
+
+    // create repositories
+    auto userRepo = std::make_shared<UserRepository>(db);
+
+    // create auth_manager
+    const char* key = "this_is_super_secret_key_and_it_wont_be_hacked";
+    auto authManager = std::make_shared<AuthManager>(key, 12, 60);
+
     // add handlers
-    this->addHandler(std::make_shared<UserHandler>("/api/users"));
+    this->addHandler(std::make_shared<UserHandler>("/api/users", userRepo, authManager));
     this->addHandler(std::make_shared<BookHandler>("/api/books"));
 
     setupStaticRoutes(*this->app_);

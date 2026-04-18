@@ -3,7 +3,7 @@
 
 #include "sqlite3.h"
 
-#include "server.hpp"
+#include "server.h"
 
 int main()
 {

@@ -51,7 +51,7 @@ check_install "g++" "g++"
 check_install "make" "make"
 check_install "cmake" "cmake"
 check_install "git" "git"
-check_install "libsqlite3-dev" "sqlite3"
+check_install "libpqxx-dev" "libpqxx"
 check_install "npm" "npm"
 
 
