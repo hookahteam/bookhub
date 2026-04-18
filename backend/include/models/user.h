@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 
 enum class UserError {
@@ -14,7 +15,7 @@ struct User
     int id;
     std::string username;
     std::string email;
-    std::string password_hash;
+    std::string password_hash = "";
     std::string role = "user";
 };
 
@@ -24,7 +25,7 @@ struct LoginResult {
 };
 
 struct RegisterResult {
-    int userId = 0;
+    std::optional<User> user = std::nullopt;
     bool success = false;
     UserError error = UserError::None;
 };

@@ -19,5 +19,6 @@ public:
 
     std::optional<User> getById(int id);
     std::optional<User> getByUsername(const std::string& username);
+    std::optional<User> getByEmail(const std::string& email);
     std::vector<User>   list();
 };

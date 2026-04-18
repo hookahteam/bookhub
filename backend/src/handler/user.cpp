@@ -96,7 +96,7 @@ crow::response UserHandler::reg(const crow::request& req)
     if (!json) {return crow::response(400, "Invalid JSON");}
 
     // Check if all json values are correct
-    if (!json.has("username") || !json.has("email") || json.has("password")) {
+    if (!json.has("username") || !json.has("email") || !json.has("password")) {
         return crow::response(400, "Missing required fields");
     }
     if (json["username"].t() != crow::json::type::String) {
@@ -105,7 +105,7 @@ crow::response UserHandler::reg(const crow::request& req)
     if (json["email"].t() != crow::json::type::String) {
         return crow::response(400, "Email must be a string");
     }
-    if (json["username"].t() != crow::json::type::String) {
+    if (json["password"].t() != crow::json::type::String) {
         return crow::response(400, "Password must be a string");
     }
 
@@ -113,15 +113,22 @@ crow::response UserHandler::reg(const crow::request& req)
     std::string email       = json["email"].s();
     std::string password    = json["password"].s();
 
+    if (userRepo->getByUsername(username)) {
+        return crow::response(409, "This username is already taken");
+    }
+    if (userRepo->getByEmail(email)) {
+        return crow::response(409, "This username is already taken");
+    }
+
     std::string password_hash = authManager->hashPassword(password);    
 
     RegisterResult res = userRepo->create(username, email, password_hash);
 
     if (res.success) {
         crow::json::wvalue resp;
-        resp["id"] = res.userId;
-        resp["username"] = username;
-        resp["email"] = email;
+        resp["id"] = res.user->id;
+        resp["username"] = res.user->username;
+        resp["email"] = res.user->email;
 
         return crow::response(crow::CREATED, resp);
     }
