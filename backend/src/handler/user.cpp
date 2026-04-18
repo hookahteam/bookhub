@@ -1,7 +1,7 @@
-#include "handler/user.hpp"
+#include "handler/user.h"
 
-UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> userRepo_)
-    : BaseHandler(basePath), userRepo(userRepo_)
+UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> userRepo_, std::shared_ptr<AuthManager> manager)
+    : BaseHandler(basePath), userRepo(userRepo_), authManager(manager)
 {
 }
 
@@ -55,19 +55,56 @@ UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserReposi
 //     return crow::response(crow::OK, userJson);
 // }
 
-crow::response UserHandler::create(const crow::request &req)
+
+crow::response UserHandler::login(const crow::request& req)
 {
     crow::json::rvalue json = crow::json::load(req.body);
-    
-    std::string username = json["username"].s(); // .s() converts value to the string
-    std::string email = json["email"].s();
 
-    last_id_ += 1;
-    auto res = userRepo->create(last_id_, username, email);
+    std::string username = json["username"].s(); // .s() converts value to the string
+    std::string password = json["password"].s();
+
+    auto user = userRepo->getByUsername(username);
+
+    authManager->verifyPassword(password, user->password_hash);
+
+    std::string token = authManager->generateToken(user->id, false);
+    
+    crow::json::wvalue resp;
+    resp["token"] = token;
+
+    return crow::response(200, resp);
+}
+
+crow::response UserHandler::reg(const crow::request& req)
+{
+    crow::json::rvalue json = crow::json::load(req.body);
+    if (!json) {return crow::response(400, "Invalid JSON");}
+
+    // Check if all json values are correct
+    if (!json.has("username") || !json.has("email") || !json.has("password")) {
+        return crow::response(400, "Missing required fields");
+    }
+    if (json["username"].t() != crow::json::type::String) {
+        return crow::response(400, "Username must be a string");
+    }
+    if (json["email"].t() != crow::json::type::String) {
+        return crow::response(400, "Email must be a string");
+    }
+    if (json["username"].t() != crow::json::type::String) {
+        return crow::response(400, "Password must be a string");
+    }
+
+    std::string username    = json["username"].s(); // .s() converts value to the string
+    std::string email       = json["email"].s();
+    std::string password    = json["password"].s();
+
+    std::string password_hash = authManager->hashPassword(password);    
+
+    RegisterResult res = userRepo->create(username, email, password_hash);
 
     if (res.success) {
         crow::json::wvalue resp;
-        resp["id"] = last_id_;
+        resp["id"] = res.userId;
         resp["username"] = username;
         resp["email"] = email;
 
@@ -147,13 +184,19 @@ void UserHandler::registerRoutes(App &app)
     //             return this->get(id);
     //         });
         
-    app.route_dynamic(this->basePath_)
+    app.route_dynamic(this->basePath_ + "/login")
         .methods(crow::HTTPMethod::POST)(
-            [this](const crow::request &req)
+            [this](const crow::request& req)
             {
-                return this->create(req);
+                return this->login(req);
             });
 
+    app.route_dynamic(this->basePath_ + "/register")
+        .methods(crow::HTTPMethod::POST)(
+            [this](const crow::request& req) 
+            {
+                return this->reg(req);
+            });
     // app.route_dynamic(this->basePath_ + "/<int>")
     //     .methods(crow::HTTPMethod::PUT)(
     //         [this](const crow::request &req, int id)

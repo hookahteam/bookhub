@@ -5,11 +5,12 @@
 #include <string>
 
 #include "crow.h"
-#include "database/database.hpp"
-#include "repository/user.hpp"
-#include "handler/user.hpp"
-#include "handler/book.hpp"
-#include "handler/interface.hpp"
+#include "database/database.h"
+#include "auth/auth_manager.h"
+#include "repository/user.h"
+#include "handler/user.h"
+#include "handler/book.h"
+#include "handler/interface.h"
 
 
 struct ServerConfig {

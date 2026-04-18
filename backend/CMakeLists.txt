@@ -68,6 +68,7 @@ add_executable(bookhub
 	src/server.cpp
 	src/database/database.cpp
 	src/repository/user.cpp
+	src/auth/auth_manager.cpp
 	src/handler/base.cpp
 	src/handler/user.cpp
 	src/handler/book.cpp
@@ -77,6 +78,8 @@ target_link_libraries(bookhub PUBLIC
 	Crow::Crow
 	Threads::Threads
 	PostgreSQL::PostgreSQL
+	OpenSSL::SSL
+	bcrypt
 	${PQXX_LIB}	
 )
 
@@ -86,6 +89,9 @@ target_include_directories(bookhub PUBLIC
 	${PROJECT_SOURCE_DIR}/include
 	${asio_SOURCE_DIR}/asio/include	
 	${PostgreSQL_INCLUDE_DIRS}
+	${bcrypt_SOURCE_DIR}/include
+	${cppcodec_SOURCE_DIR}
+	${nlohmann_SOURCE_DIR}/include
 )
 
 # Опции компиляции

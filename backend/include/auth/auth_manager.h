@@ -2,6 +2,8 @@
 
 #include <optional>
 #include <chrono>
+#include <sstream>
+#include <string>
 
 #include <openssl/sha.h>
 #include <openssl/hmac.h>
@@ -22,10 +24,16 @@ private:
 public:
     AuthManager(const std::string& secret, int load, int time);
 
-    std::vector<uint8_t> hmacSHA256(const std::string& key, const std::string& data);
+    // helper functions
+    std::vector<uint8_t>        hmacSHA256(const std::string& key, const std::string& data);
+
+    bool verifyHeader(std::string_view header_b64);
+    bool verifyPayload(std::string_view payload_b64);
+    bool verifySignature(std::string_view signature_b64);
     
+    // main functions
     std::string         hashPassword(const std::string& plain);
     bool                verifyPassword(const std::string& plain, const std::string& storedHash);
     std::string         generateToken(int userId, bool admin);
-    std::optional<int>  validateToken(const std::string& token);
+    std::optional<int>  validateToken(std::string_view token);
 };
