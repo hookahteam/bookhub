@@ -59,16 +59,31 @@ UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserReposi
 crow::response UserHandler::login(const crow::request& req)
 {
     crow::json::rvalue json = crow::json::load(req.body);
+    if (!json) {return crow::response(400, "Invalid JSON");}
+
+    if (!json.has("username") || !json.has("password")) {
+        return crow::response(400, "Missing requered fields");
+    } 
+    if (json["username"].t() != crow::json::type::String) {
+        return crow::response(400, "Username must be a string");
+    }
+    if (json["password"].t() != crow::json::type::String) {
+        return crow::response(400, "Password must be a string");
+    }
 
     std::string username = json["username"].s(); // .s() converts value to the string
     std::string password = json["password"].s();
 
+    // Verifying username and password
     auto user = userRepo->getByUsername(username);
+    if (!user) {return crow::response(401, "Invalid username");}
 
-    authManager->verifyPassword(password, user->password_hash);
+    if (!authManager->verifyPassword(password, user->password_hash)) {
+        return crow::response(401, "Wrong password");
+    }
 
+    // If all good returning token
     std::string token = authManager->generateToken(user->id, false);
-    
     crow::json::wvalue resp;
     resp["token"] = token;
 
@@ -81,7 +96,7 @@ crow::response UserHandler::reg(const crow::request& req)
     if (!json) {return crow::response(400, "Invalid JSON");}
 
     // Check if all json values are correct
-    if (!json.has("username") || !json.has("email") || !json.has("password")) {
+    if (!json.has("username") || !json.has("email") || json.has("password")) {
         return crow::response(400, "Missing required fields");
     }
     if (json["username"].t() != crow::json::type::String) {
