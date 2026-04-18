@@ -24,7 +24,16 @@ const translations = {
       title: 'Sign In'
     },
     signUp: {
-      title: 'Sign Up'
+      title: 'Sign Up',
+      username: 'Username',
+      usernamePlaceholder: 'Enter your username',
+      email: 'Email',
+      emailPlaceholder: 'Enter your email',
+      password: 'Password',
+      passwordPlaceholder: 'Enter password (min 6 characters)',
+      confirmPassword: 'Confirm Password',
+      confirmPasswordPlaceholder: 'Confirm your password',
+      submit: 'Create Account'
     },
     myLibrary: {
       title: 'My Library'
@@ -62,7 +71,16 @@ const translations = {
       title: 'Вход'
     },
     signUp: {
-      title: 'Регистрация'
+      title: 'Регистрация',
+      username: 'Имя пользователя',
+      usernamePlaceholder: 'Введите имя пользователя',
+      email: 'Почта',
+      emailPlaceholder: 'Введите ваш email',
+      password: 'Пароль',
+      passwordPlaceholder: 'Введите пароль (мин. 6 символов)',
+      confirmPassword: 'Подтвердите пароль',
+      confirmPasswordPlaceholder: 'Повторите пароль',
+      submit: 'Создать аккаунт'
     },
     myLibrary: {
       title: 'Моя библиотека'
