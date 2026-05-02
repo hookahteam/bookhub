@@ -12,20 +12,29 @@ RegisterResult UserRepository::create(
     )
 {
     try {
-        pqxx::row row = db->execParams(
+        pqxx::result res = db->execParams(
             "INSERT INTO USERS (username, email, password_hash) "
             "VALUES (LOWER($1), LOWER($2), $3) "
+            "ON CONFLICT DO NOTHING "
             "RETURNING id, username, email, password_hash;",
-            {username, email, password_hash}).begin();
+            {username, email, password_hash});
         
-        if (row.empty()) {
+        if (res.empty()) {
             return {std::nullopt, false, UserError::UserAlreadyExists};
         }
+
+        pqxx::row row = res[0];
+
+        if (row["id"].is_null()) {
+            std::cerr << "База вернула ID пользователя NULL" << std::endl;
+            return {std::nullopt, false, UserError::UserAlreadyExists};
+        }
+
         return {std::make_optional<User>(
-            row[0].as<int>(), 
-            row[1].as<std::string>(), 
-            row[2].as<std::string>()), 
-            true, 
+            row["id"].as<int>(),
+            row["username"].as<std::string>(), 
+            row["email"].as<std::string>()),
+            true,
             UserError::None};
     }
     catch (const pqxx::sql_error& e) {
@@ -37,19 +46,21 @@ RegisterResult UserRepository::create(
 
 std::optional<User> UserRepository::getById(int id)
 {
-    pqxx::row row = db->execParams(
+    pqxx::result res = db->execParams(
         "SELECT id, username, email, password_hash, role FROM users "
         "WHERE id = $1;",
-        {id}).begin();
+        {id});
 
-    if (row.empty()) {return std::nullopt;}
+    if (res.empty()) {return std::nullopt;}
+
+    pqxx::row row = res[0];
 
     User user = User(
-        row[0].as<int>(), 
-        row[1].as<std::string>(), 
-        row[2].as<std::string>(),
-        row[3].as<std::string>(),
-        row[4].as<std::string>()
+        row["id"].as<int>(), 
+        row["username"].as<std::string>(), 
+        row["email"].as<std::string>(),
+        row["password_hash"].as<std::string>(),
+        row["role"].as<std::string>()
     );
 
     return user;
@@ -58,34 +69,38 @@ std::optional<User> UserRepository::getById(int id)
 
 std::optional<User> UserRepository::getByUsername(const std::string& username)
 {
-    pqxx::row row = db->execParams(
+    pqxx::result res = db->execParams(
         "SELECT id, username, email FROM users "
-        "WHERE LOWER(username) = $1;",
-        {username}).begin();
+        "WHERE username = LOWER($1);",
+        {username});
     
-    if (row.empty()) {return std::nullopt;}
+    if (res.empty()) {return std::nullopt;}
+
+    pqxx::row row = res[0];
 
     User user = User(
-        row[0].as<int>(), 
-        row[1].as<std::string>(), 
-        row[2].as<std::string>());
+        row["id"].as<int>(), 
+        row["username"].as<std::string>(), 
+        row["email"].as<std::string>());
 
     return user;
 }
 
 std::optional<User> UserRepository::getByEmail(const std::string& email)
 {
-    pqxx::row row = db->execParams(
+    pqxx::result res = db->execParams(
         "SELECT id, username, email FROM users "
-        "WHERE LOWER(email) = $1;",
-        {email}).begin();
+        "WHERE email = LOWER($1);",
+        {email});
     
-    if (row.empty()) {return std::nullopt;}
+    if (res.empty()) {return std::nullopt;}
+
+    pqxx::row row = res[0];
 
     User user = User(
-        row[0].as<int>(), 
-        row[1].as<std::string>(), 
-        row[2].as<std::string>());
+        row["id"].as<int>(), 
+        row["username"].as<std::string>(), 
+        row["email"].as<std::string>());
 
     return user;
 }

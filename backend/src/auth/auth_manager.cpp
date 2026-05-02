@@ -3,6 +3,10 @@
 
 using b64 = cppcodec::base64_url;
 
+AuthManager::AuthManager()
+{
+}
+
 AuthManager::AuthManager(const std::string& secret, int load, int time)
     : secretKey(secret), workload(load), expTimeMinutes(time)
 {

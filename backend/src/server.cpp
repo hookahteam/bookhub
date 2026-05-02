@@ -30,6 +30,7 @@ Server::Server(const ServerConfig &config): config_(config)
 
     // App init
     this->app_ = std::make_unique<App>();
+    std::cout << "App дефолтный создан\n";
 
     // Config cors
     if (this->config_.cors){
@@ -48,6 +49,7 @@ Server::Server(const ServerConfig &config): config_(config)
             .prefix("/api/")
             .max_age(3600);
     }
+    std::cout << "CORS middleware настроен\n";
 }
 
 void Server::setup()
@@ -60,17 +62,26 @@ void Server::setup()
 
     // create auth_manager
     const char* key = "this_is_super_secret_key_and_it_wont_be_hacked";
-    auto authManager = std::make_shared<AuthManager>(key, 12, 60);
+    auto authManager = std::make_shared<AuthManager>(key, 12, 60);    
+
+    this->app_->get_middleware<AuthMiddleware>() = AuthMiddleware(authManager);
+    std::cout << "AuthMiddleware настроен\n";
 
     // add handlers
-    this->addHandler(std::make_shared<UserHandler>("/api/users", userRepo, authManager));
-    this->addHandler(std::make_shared<BookHandler>("/api/books"));
+    userHandler = std::make_shared<UserHandler>("/api/users", userRepo, authManager);
+    bookHandler = std::make_shared<BookHandler>("/api/books");
+
+    // setup handler routes
+    userHandler->registerRoutes(*this->app_);
+    bookHandler->registerRoutes(*this->app_);
 
     setupStaticRoutes(*this->app_);
 }
 
 void Server::setupStaticRoutes(App &app)
 {
+    CROW_ROUTE(app, "/test_ping")([](){ return "pong"; });
+
     app.route_dynamic("/")
         .methods(crow::HTTPMethod::GET)(
             [this](const crow::request &req, crow::response &res) {
@@ -87,13 +98,6 @@ void Server::setupStaticRoutes(App &app)
             });
 
 }
-
-void Server::addHandler(std::shared_ptr<IHandler> handler)
-{
-    this->handlers_.push_back(handler);
-    handler->registerRoutes(*this->app_);
-}
-
 void Server::start()
 {
     this->setup();

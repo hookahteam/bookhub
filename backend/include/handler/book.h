@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../models/book.h"
-#include "base.h"
 
-class BookHandler : public BaseHandler
+#include "../types.h"
+
+class BookHandler 
 {
 public:
     BookHandler(const std::string &basePath);
@@ -17,6 +18,7 @@ private:
     // crow::response update(int id, const crow::request &req);
     // crow::response remove(int id);
 
+    std::string basePath_;
     std::unordered_map<int, Book> books_;
     int last_id_;
 };

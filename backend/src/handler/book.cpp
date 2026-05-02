@@ -1,15 +1,15 @@
 #include "handler/book.h"
 
 BookHandler::BookHandler(const std::string &basePath)
-    : BaseHandler(basePath)
+    : basePath_(basePath)
 {
     // Init mock data
     this->last_id_ = 0;
 
     this->last_id_ += 1;
-    this->books_[last_id_] = Book{"50 оттенков серого", "Артем Меднов", 2012, last_id_};
+    this->books_[last_id_] = Book{"Книга 1", "Автор 1", 2012, last_id_};
     this->last_id_ += 1;
-    this->books_[last_id_] = Book{"Майнкрафт строим вместе", "Роман Леднев", 2017, last_id_};
+    this->books_[last_id_] = Book{"Книга 2", "Автор 2", 2017, last_id_};
 }
 
 crow::response BookHandler::list(const crow::request &req)
@@ -38,7 +38,7 @@ crow::response BookHandler::list(const crow::request &req)
 crow::response BookHandler::get(int id)
 {
     if (this->books_.find(id) == this->books_.end()) {
-        return this->not_found("Book not found");
+        // not found
     }
 
     Book book = this->books_[id];

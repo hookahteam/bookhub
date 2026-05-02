@@ -1,10 +1,11 @@
 #pragma once
 
-#include "base.h"
 #include "repository/user.h"
 #include "auth/auth_manager.h"
 
-class UserHandler : public BaseHandler
+#include "../types.h"
+
+class UserHandler 
 {
 public:
     UserHandler(
@@ -22,6 +23,7 @@ private:
     // crow::response update(int id, const crow::request &req);
     // crow::response remove(int id);
 
+    std::string basePath_;
     std::shared_ptr<UserRepository> userRepo;
     std::shared_ptr<AuthManager> authManager;
 };

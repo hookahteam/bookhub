@@ -22,6 +22,7 @@ private:
     int expTimeMinutes;
 
 public:
+    AuthManager();
     AuthManager(const std::string& secret, int load, int time);
 
     // helper functions

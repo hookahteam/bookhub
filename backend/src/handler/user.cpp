@@ -1,7 +1,7 @@
 #include "handler/user.h"
 
-UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> userRepo_, std::shared_ptr<AuthManager> manager)
-    : BaseHandler(basePath), userRepo(userRepo_), authManager(manager)
+UserHandler::UserHandler(const std::string &basePath, std::shared_ptr<UserRepository> repo, std::shared_ptr<AuthManager> manager)
+    : basePath_(basePath), userRepo(repo), authManager(manager)
 {
 }
 
@@ -117,14 +117,17 @@ crow::response UserHandler::reg(const crow::request& req)
         return crow::response(409, "This username is already taken");
     }
     if (userRepo->getByEmail(email)) {
-        return crow::response(409, "This username is already taken");
+        return crow::response(409, "Account with this email already exists");
     }
 
     std::string password_hash = authManager->hashPassword(password);    
 
+    std::cout << "DEBUG: Зашли в userRepo" << std::endl;
     RegisterResult res = userRepo->create(username, email, password_hash);
+    std::cout << "DEBUG: Вышли из userRepo" << std::endl;
 
     if (res.success) {
+        std::cout << "DEBUG: Вернул registerresult успешно" << std::endl;
         crow::json::wvalue resp;
         resp["id"] = res.user->id;
         resp["username"] = res.user->username;
@@ -219,6 +222,7 @@ void UserHandler::registerRoutes(App &app)
             {
                 return this->reg(req);
             });
+    
     // app.route_dynamic(this->basePath_ + "/<int>")
     //     .methods(crow::HTTPMethod::PUT)(
     //         [this](const crow::request &req, int id)

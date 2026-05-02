@@ -69,7 +69,7 @@ add_executable(bookhub
 	src/database/database.cpp
 	src/repository/user.cpp
 	src/auth/auth_manager.cpp
-	src/handler/base.cpp
+	src/auth/auth_middleware.cpp
 	src/handler/user.cpp
 	src/handler/book.cpp
 )
@@ -98,7 +98,7 @@ target_include_directories(bookhub PUBLIC
 if(MSVC)
 	target_compile_options(bookhub PUBLIC /W4)
 else()
-	target_compile_options(bookhub PUBLIC -Wall -Wextra -O2)
+	target_compile_options(bookhub PUBLIC -O2)
 endif()
 
 # Куда класть исполняемый файл
