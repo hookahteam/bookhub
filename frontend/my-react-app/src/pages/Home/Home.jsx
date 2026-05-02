@@ -15,7 +15,7 @@ const Home = () => {
   const fetchRandomBooks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/books');
+      const response = await fetch('http://85.192.42.15:8000/api/books');
       
       if (!response.ok) {
         throw new Error(`Ошибка: ${response.status}`);
