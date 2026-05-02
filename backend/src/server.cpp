@@ -55,7 +55,7 @@ Server::Server(const ServerConfig &config): config_(config)
 void Server::setup()
 {
     // connect to database
-    auto db = std::make_shared<Database>("test");
+    auto db = std::make_shared<Database>("bookhub");
 
     // create repositories
     auto userRepo = std::make_shared<UserRepository>(db);
