@@ -27,7 +27,7 @@ sudo -u postgres createuser deploy
 sudo -u postgres psql
 
 # Даем права на владение базой (чтобы он мог создавать таблицы)
-ALTER DATABASE OWNER TO deploy;
+ALTER DATABASE bookhub OWNER TO deploy;
 
 # p.s. Бред, но так как проект маленький, то постоянно вручную создавать новые таблицы неудобно. 
 # Так бы я ограничил привелегии deploy. Короче позже исправим 
